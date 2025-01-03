@@ -40,13 +40,30 @@ const removeFromCart = async (req, res) => {
 // Fetch user cart data
 const getCart = async (req, res) => {
     try {
+        // Validate userId
+        if (!req.body.userId) {
+            return res.json({ success: false, message: "User ID is required" });
+        }
+
+        // Fetch user data
         let userData = await UserModel.findById(req.body.userId);
-        let cartData = await userData.cartData;
-        res.json({success:true, cartData})
+        if (!userData) {
+            return res.json({ success: false, message: "User not found" });
+        }
+
+        // Access cart data
+        let cartData = userData.cartData;
+        if (!cartData) {
+            return res.json({ success: false, message: "Cart data not found" });
+        }
+
+        // Respond with cart data
+        res.json({ success: true, cartData });
     } catch (error) {
         console.log(error);
-        res.json({success:false, message:"Error"})
+        res.json({ success: false, message: "An error occurred" });
     }
-}
+};
+
 
 export {addToCart, removeFromCart, getCart}

@@ -39,7 +39,7 @@ app.post("/api/rateItem", async (req, res) => {
   const { itemId, rating, Item } = req.body;
 
   // Validate the incoming data
-  if (!itemId || !Item || !rating || rating < 1 || rating > 5) {
+  if (!itemId || !Item || typeof rating !== 'number' || rating < 1 || rating > 5) {
     return res.status(400).json({ error: "Invalid data. Ensure itemId, Item name, and rating between 1 and 5 are provided." });
   }
 
@@ -53,6 +53,9 @@ app.post("/api/rateItem", async (req, res) => {
     } else {
       // If ratings exist, add the new rating to the array
       existingRating.ratings.push(rating);
+      // Optionally, update average rating
+      const totalRatings = existingRating.ratings.reduce((sum, rate) => sum + rate, 0);
+      existingRating.averageRating = totalRatings / existingRating.ratings.length;
     }
 
     // Save the updated rating data to the database
@@ -65,6 +68,7 @@ app.post("/api/rateItem", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 
 // Server connection
 app.listen(port, () => {

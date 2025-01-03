@@ -1,5 +1,5 @@
 import OrderModel from "../models/OrderModel.js";
-import UserModel from "../models/userModel.js";
+import UserModel from "../models/UserModel.js";
 // import Stripe from "stripe";
 
 // const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
